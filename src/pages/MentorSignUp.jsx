@@ -204,7 +204,7 @@ const MentorSignUp = () => {
         <div style={{ marginTop: '16px' }}>
           <label style={labelStyle}>आप कौन से विषय पढ़ा सकते हैं? (Select Multiple)</label>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '8px' }}>
-            {AVAILABLE_SUBJECTS.map((sub) => {
+            {subjectOptions.map((sub) => {
               const selected = formData.subjects.includes(sub);
               return (
                 <button
