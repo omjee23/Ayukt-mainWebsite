@@ -333,7 +333,7 @@ const OfficialNGOStamp = ({ bgMode }) => (
 
 // Luxury Ornate Gold Divider
 const LuxuryOrnateDivider = () => (
-  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', margin: '3px auto 2px auto' }}>
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', margin: '5px auto 2px auto' }}>
     <div style={{ height: '1.2px', width: '90px', background: 'linear-gradient(90deg, transparent, #d4af37)' }} />
     <span style={{ color: '#d4af37', fontSize: '9px' }}>✦</span>
     <span style={{ color: '#ca8a04', fontSize: '11px' }}>❖</span>
@@ -911,12 +911,17 @@ export default function CertificateModal({ isOpen, onClose, certificate }) {
             />
 
             {/* SECTION A: REGAL HEADER */}
-            <div style={{ position: 'relative', zIndex: 2, marginTop: '2px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '14px' }}>
+            <div style={{ position: 'relative', zIndex: 2, marginTop: '12px', marginBottom: '4px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', width: '100%' }}>
+                {/* Left Circular NGO Logo */}
                 <div
                   style={{
-                    width: '52px',
-                    height: '52px',
+                    position: 'absolute',
+                    left: '28px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: '54px',
+                    height: '54px',
                     borderRadius: '50%',
                     background: '#ffffff',
                     padding: '2px',
@@ -928,32 +933,33 @@ export default function CertificateModal({ isOpen, onClose, certificate }) {
                     flexShrink: 0
                   }}
                 >
-                  <img src={logoImg} alt="AU Logo" style={{ width: '44px', height: '44px', borderRadius: '50%' }} />
+                  <img src={logoImg} alt="AU Logo" style={{ width: '46px', height: '46px', borderRadius: '50%' }} />
                 </div>
 
-                <div style={{ textAlign: 'left' }}>
+                {/* Centered NGO Name & Subtitles */}
+                <div style={{ textAlign: 'center', padding: '0 85px', width: '100%' }}>
                   <h2
                     style={{
-                      margin: 0,
-                      fontSize: '24px',
+                      margin: '0 0 3px 0',
+                      fontSize: '25px',
                       color: currentTheme.primaryText,
-                      fontFamily: "'Playfair Display', Georgia, serif",
+                      fontFamily: "'Noto Sans Devanagari', 'Poppins', 'Playfair Display', Georgia, serif",
                       fontWeight: '900',
                       letterSpacing: '0.8px',
-                      lineHeight: 1.15
+                      lineHeight: 1.35
                     }}
                   >
                     अव्युक्त उत्थान संस्था
                   </h2>
                   <span
                     style={{
-                      fontSize: '11.5px',
-                      letterSpacing: '4.5px',
+                      fontSize: '12px',
+                      letterSpacing: '5px',
                       color: currentTheme.accentColor,
                       textTransform: 'uppercase',
                       fontWeight: '800',
                       display: 'block',
-                      marginTop: '2px',
+                      margin: '2px 0 3px 0',
                       fontFamily: "'Cinzel', serif"
                     }}
                   >
@@ -965,7 +971,6 @@ export default function CertificateModal({ isOpen, onClose, certificate }) {
                       color: currentTheme.subText,
                       letterSpacing: '0.8px',
                       display: 'block',
-                      marginTop: '1px',
                       textTransform: 'uppercase',
                       fontFamily: "'Montserrat', sans-serif",
                       fontWeight: '600'
