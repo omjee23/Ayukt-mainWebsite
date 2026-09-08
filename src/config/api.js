@@ -60,10 +60,16 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Standalone Bulletproof SVG Default Avatar (Royal Forest Emerald & Gold theme)
+export const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23173d35'/%3E%3Ccircle cx='50' cy='38' r='18' fill='%23e8b35a'/%3E%3Cpath d='M20 85c0-16.569 13.431-30 30-30s30 13.431 30 30v5H20v-5z' fill='%23e8b35a'/%3E%3C/svg%3E";
+
 // Safe Image URL Resolver (resolves base64, relative uploads, localhost fallbacks, and absolute URLs)
 export const getImageSrc = (url) => {
-  if (!url) return '';
+  if (!url) return DEFAULT_AVATAR;
   const cleanUrl = String(url).trim();
+  if (cleanUrl.includes('flaticon.com')) {
+    return DEFAULT_AVATAR;
+  }
   if (cleanUrl.startsWith('data:')) {
     return cleanUrl;
   }
@@ -79,6 +85,7 @@ export const getImageSrc = (url) => {
   }
   return `${BACKEND_URL}${cleanPath}`;
 };
+
 
 
 export default API;

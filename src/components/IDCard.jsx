@@ -1,6 +1,7 @@
 import React from 'react';
 import logoImg from '../assets/logo.png';
-import { getImageSrc } from '../config/api';
+import { getImageSrc, DEFAULT_AVATAR } from '../config/api';
+
 
 
 const ROLE_THEMES = {
@@ -169,10 +170,13 @@ const IDCard = ({ user }) => {
           {/* User Avatar with Role Ring */}
           <div style={{ ...avatarWrapperStyle, borderColor: theme.avatarRing }}>
             <img
-              src={getImageSrc(user.avatar) || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}
+              src={getImageSrc(user.avatar)}
               alt={user.name}
               style={avatarStyle}
-              onError={(e) => { e.target.src = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'; }}
+              onError={(e) => { 
+                e.target.onerror = null; 
+                e.target.src = DEFAULT_AVATAR; 
+              }}
             />
           </div>
 

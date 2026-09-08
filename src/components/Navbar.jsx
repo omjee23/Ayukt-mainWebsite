@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { getImageSrc } from '../config/api';
+import { getImageSrc, DEFAULT_AVATAR } from '../config/api';
 import logoImg from '../assets/logo.png';
 import { OFFICIAL_SOCIAL_LINKS } from '../constants/socialLinks';
 
@@ -153,9 +153,10 @@ const Navbar = () => {
                 title="क्लिक करके प्रोफाइल एडिट करें"
               >
                 <img 
-                  src={getImageSrc(currentUser?.avatar) || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} 
+                  src={getImageSrc(currentUser?.avatar)} 
                   alt="Profile" 
                   style={{ width: '26px', height: '26px', borderRadius: '50%', objectFit: 'cover' }} 
+                  onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_AVATAR; }}
                 />
                 <span style={{ fontSize: '13px', fontWeight: '600', color: '#fbfaf5' }}>
                   {currentUser?.name ? currentUser.name.split(' ')[0] : 'User'}
@@ -247,9 +248,10 @@ const Navbar = () => {
             gap: '12px'
           }}>
             <img 
-              src={getImageSrc(currentUser?.avatar) || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} 
+              src={getImageSrc(currentUser?.avatar)} 
               alt="Avatar"
               style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #e8b35a' }}
+              onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_AVATAR; }}
             />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ color: '#fff', fontWeight: 600, fontSize: '14px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>

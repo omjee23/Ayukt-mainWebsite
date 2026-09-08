@@ -1,10 +1,11 @@
 import React, { createContext, useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
 
-import { API, API_BASE_URL, BACKEND_URL, ADMIN_URL, getImageSrc } from '../config/api';
+import { API, API_BASE_URL, BACKEND_URL, ADMIN_URL, getImageSrc, DEFAULT_AVATAR } from '../config/api';
 
 export const AuthContext = createContext();
-export { API, API_BASE_URL, BACKEND_URL, ADMIN_URL, getImageSrc };
+export { API, API_BASE_URL, BACKEND_URL, ADMIN_URL, getImageSrc, DEFAULT_AVATAR };
+
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

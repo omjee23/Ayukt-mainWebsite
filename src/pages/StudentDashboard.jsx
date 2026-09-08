@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback, useMemo } from 'react';
-import { AuthContext, getImageSrc } from '../context/AuthContext';
+import { AuthContext, getImageSrc, DEFAULT_AVATAR } from '../context/AuthContext';
 import IDCard from '../components/IDCard';
+
 
 import CertificatesPage from './CertificatesPage';
 import VideoPlayerModal from '../components/VideoPlayerModal';
@@ -717,13 +718,16 @@ const StudentDashboard = () => {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
           <img 
-            src={getImageSrc(currentUser?.avatar) || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} 
-            alt="Profile" 
+            src={getImageSrc(currentUser?.avatar)} 
+            alt={currentUser?.name || "Student"} 
             className="dashboard-avatar"
             style={{ cursor: 'pointer' }}
             onClick={() => setActiveTab('profile')}
             title="क्लिक करके प्रोफाइल एडिट करें"
-            onError={(e) => { e.target.src = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'; }}
+            onError={(e) => { 
+              e.target.onerror = null; 
+              e.target.src = DEFAULT_AVATAR; 
+            }}
           />
           <button
             type="button"
@@ -2166,10 +2170,13 @@ const StudentDashboard = () => {
               <label style={labelStyle}>📷 प्रोफाइल फोटो अपलोड करें:</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '6px' }}>
                 <img 
-                  src={getImageSrc(currentUser?.avatar) || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} 
+                  src={getImageSrc(currentUser?.avatar)} 
                   alt="Avatar Preview" 
                   style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #e8b35a' }}
-                  onError={(e) => { e.target.src = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'; }}
+                  onError={(e) => { 
+                    e.target.onerror = null; 
+                    e.target.src = DEFAULT_AVATAR; 
+                  }}
                 />
                 <div style={{ flex: 1 }}>
                   <input type="file" accept="image/*" onChange={handleFileChange} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} />

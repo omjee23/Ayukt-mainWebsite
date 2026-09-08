@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback, useMemo } from 'react';
-import { AuthContext, getImageSrc } from '../context/AuthContext';
+import { AuthContext, getImageSrc, DEFAULT_AVATAR } from '../context/AuthContext';
 import CertificatesPage from './CertificatesPage';
+
 
 import IDCard from '../components/IDCard';
 import VideoPlayerModal from '../components/VideoPlayerModal';
@@ -467,10 +468,10 @@ const MentorDashboard = () => {
 
         <div>
           <img
-            src={getImageSrc(currentUser?.avatar) || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}
+            src={getImageSrc(currentUser?.avatar)}
             alt="Profile"
             className="dashboard-avatar"
-            onError={(e) => { e.target.src = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'; }}
+            onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_AVATAR; }}
           />
         </div>
       </div>
