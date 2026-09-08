@@ -137,7 +137,21 @@ const Navbar = () => {
               </Link>
               
               {/* User Profile Badge */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.08)', padding: '5px 12px', borderRadius: '20px', border: '1px solid rgba(232,179,90,0.35)' }}>
+              <div 
+                onClick={() => navigate(`${getDashboardPath()}?tab=profile`)}
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '8px', 
+                  background: 'rgba(255,255,255,0.08)', 
+                  padding: '5px 12px', 
+                  borderRadius: '20px', 
+                  border: '1px solid rgba(232,179,90,0.35)',
+                  cursor: 'pointer',
+                  transition: 'background 0.2s ease'
+                }}
+                title="क्लिक करके प्रोफाइल एडिट करें"
+              >
                 <img 
                   src={getImageSrc(currentUser?.avatar) || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} 
                   alt="Profile" 
@@ -146,6 +160,7 @@ const Navbar = () => {
                 <span style={{ fontSize: '13px', fontWeight: '600', color: '#fbfaf5' }}>
                   {currentUser?.name ? currentUser.name.split(' ')[0] : 'User'}
                 </span>
+                <span style={{ fontSize: '12px', color: '#e8b35a' }} title="Edit Profile">✏️</span>
               </div>
 
               <button className="nav-logout" onClick={handleLogout}>
@@ -244,21 +259,39 @@ const Navbar = () => {
                 {currentUser?.role || 'Member'}
               </div>
             </div>
-            <Link 
-              to={getDashboardPath()}
-              onClick={() => setIsMobileOpen(false)}
-              style={{
-                fontSize: '11.5px',
-                background: '#e8b35a',
-                color: '#173d35',
-                padding: '5px 10px',
-                borderRadius: '6px',
-                fontWeight: 700,
-                textDecoration: 'none'
-              }}
-            >
-              Dashboard
-            </Link>
+            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+              <Link 
+                to={getDashboardPath()}
+                onClick={() => setIsMobileOpen(false)}
+                style={{
+                  fontSize: '11.5px',
+                  background: '#e8b35a',
+                  color: '#173d35',
+                  padding: '5px 10px',
+                  borderRadius: '6px',
+                  fontWeight: 700,
+                  textDecoration: 'none'
+                }}
+              >
+                Dashboard
+              </Link>
+              <Link 
+                to={`${getDashboardPath()}?tab=profile`}
+                onClick={() => setIsMobileOpen(false)}
+                style={{
+                  fontSize: '11.5px',
+                  background: 'rgba(255, 255, 255, 0.15)',
+                  color: '#ffffff',
+                  padding: '5px 8px',
+                  borderRadius: '6px',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  border: '1px solid rgba(255, 255, 255, 0.25)'
+                }}
+              >
+                ✏️ Profile
+              </Link>
+            </div>
           </div>
         )}
 

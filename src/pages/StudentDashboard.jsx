@@ -151,6 +151,15 @@ const StudentDashboard = () => {
     fetchBatches();
   }, [token, setUser, fetchBatches, API]);
 
+  // Sync activeTab with URL Query Parameter (?tab=profile)
+  useEffect(() => {
+    const tabParam = new URLSearchParams(location.search).get('tab');
+    if (tabParam) {
+      setActiveTab(tabParam);
+    }
+  }, [location.search]);
+
+
   // Fetch Classes
   const fetchClasses = useCallback(async () => {
     setLoading(true);
@@ -682,14 +691,58 @@ const StudentDashboard = () => {
             <span className="dashboard-hero-badge" style={{ background: 'rgba(232, 179, 90, 0.18)' }}>
               🏫 {schoolOrCollegeDisplay}
             </span>
+            <button
+              type="button"
+              onClick={() => setActiveTab('profile')}
+              style={{
+                background: activeTab === 'profile' ? '#ffffff' : '#e8b35a',
+                color: '#173d35',
+                border: 'none',
+                padding: '4px 12px',
+                borderRadius: '16px',
+                fontSize: '12px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              ✏️ एडिट प्रोफाइल
+            </button>
           </div>
         </div>
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
           <img 
             src={currentUser?.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} 
             alt="Profile" 
             className="dashboard-avatar"
+            style={{ cursor: 'pointer' }}
+            onClick={() => setActiveTab('profile')}
+            title="क्लिक करके प्रोफाइल एडिट करें"
           />
+          <button
+            type="button"
+            onClick={() => setActiveTab('profile')}
+            style={{
+              padding: '4px 10px',
+              fontSize: '11px',
+              fontWeight: '700',
+              background: activeTab === 'profile' ? '#e8b35a' : 'rgba(255, 255, 255, 0.18)',
+              color: activeTab === 'profile' ? '#173d35' : '#ffffff',
+              border: '1px solid rgba(232, 179, 90, 0.5)',
+              borderRadius: '20px',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            ✏️ प्रोफाइल बदलें
+          </button>
         </div>
       </div>
 
@@ -754,12 +807,12 @@ const StudentDashboard = () => {
         <button onClick={() => setActiveTab('classes')} style={tabBtnStyle(activeTab === 'classes')}>📚 मेरी क्लासेज</button>
         <button onClick={() => setActiveTab('live_sessions')} style={tabBtnStyle(activeTab === 'live_sessions')}>🔴 लाइव सत्र (Live Sessions)</button>
         <button onClick={() => setActiveTab('homework')} style={tabBtnStyle(activeTab === 'homework')}>📝 होमवर्क पोर्टल (2-View)</button>
+        <button onClick={() => setActiveTab('profile')} style={tabBtnStyle(activeTab === 'profile')}>✏️ एडिट प्रोफाइल</button>
+        <button onClick={() => setActiveTab('idcard')} style={tabBtnStyle(activeTab === 'idcard')}>🪪 डिजिटल ID कार्ड</button>
         <button onClick={() => setActiveTab('recordings')} style={tabBtnStyle(activeTab === 'recordings')}>▶️ रिकॉर्डिंग्स आर्काइव</button>
         <button onClick={() => setActiveTab('opportunities')} style={tabBtnStyle(activeTab === 'opportunities')}>🎯 अवसर व परीक्षाएं</button>
         <button onClick={() => setActiveTab('community')} style={tabBtnStyle(activeTab === 'community')}>📢 कम्युनिटी फ़ीड</button>
-        <button onClick={() => setActiveTab('idcard')} style={tabBtnStyle(activeTab === 'idcard')}>🪪 डिजिटल ID कार्ड</button>
         <button onClick={() => setActiveTab('certificates')} style={tabBtnStyle(activeTab === 'certificates')}>🏆 सर्टिफिकेट्स</button>
-        <button onClick={() => setActiveTab('profile')} style={tabBtnStyle(activeTab === 'profile')}>✏️ एडिट प्रोफाइल</button>
         <button onClick={() => setActiveTab('feedback')} style={tabBtnStyle(activeTab === 'feedback')}>💬 फ़ीडबैक दें</button>
       </div>
 
