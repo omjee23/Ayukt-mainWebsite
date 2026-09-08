@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback, useMemo } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext, getImageSrc } from '../context/AuthContext';
 import CertificatesPage from './CertificatesPage';
+
 import IDCard from '../components/IDCard';
 import VideoPlayerModal from '../components/VideoPlayerModal';
 import { useLocation } from 'react-router-dom';
@@ -339,9 +340,10 @@ const VolunteerDashboard = () => {
         </div>
         <div>
           <img 
-            src={currentUser?.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} 
+            src={getImageSrc(currentUser?.avatar) || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} 
             alt="Profile" 
             className="dashboard-avatar"
+            onError={(e) => { e.target.src = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'; }}
           />
         </div>
       </div>

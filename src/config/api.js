@@ -60,16 +60,25 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Safe Image URL Resolver (resolves relative uploads, localhost fallbacks, and absolute URLs)
+// Safe Image URL Resolver (resolves base64, relative uploads, localhost fallbacks, and absolute URLs)
 export const getImageSrc = (url) => {
   if (!url) return '';
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    if (url.includes('localhost:5000') || url.includes('localhost:5001')) {
-      return url.replace(/https?:\/\/localhost:(5000|5001)/, BACKEND_URL);
-    }
-    return url;
+  const cleanUrl = String(url).trim();
+  if (cleanUrl.startsWith('data:')) {
+    return cleanUrl;
   }
-  return `${BACKEND_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+  if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://')) {
+    if (cleanUrl.includes('localhost:5000') || cleanUrl.includes('localhost:5001')) {
+      return cleanUrl.replace(/https?:\/\/localhost:(5000|5001)/, BACKEND_URL);
+    }
+    return cleanUrl;
+  }
+  let cleanPath = cleanUrl.startsWith('/') ? cleanUrl : `/${cleanUrl}`;
+  if (!cleanPath.startsWith('/uploads/') && !cleanPath.startsWith('/assets/')) {
+    cleanPath = `/uploads${cleanPath}`;
+  }
+  return `${BACKEND_URL}${cleanPath}`;
 };
+
 
 export default API;

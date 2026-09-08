@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback, useMemo } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext, getImageSrc } from '../context/AuthContext';
 import IDCard from '../components/IDCard';
+
 import CertificatesPage from './CertificatesPage';
 import VideoPlayerModal from '../components/VideoPlayerModal';
 import { useLocation } from 'react-router-dom';
@@ -716,12 +717,13 @@ const StudentDashboard = () => {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
           <img 
-            src={currentUser?.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} 
+            src={getImageSrc(currentUser?.avatar) || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} 
             alt="Profile" 
             className="dashboard-avatar"
             style={{ cursor: 'pointer' }}
             onClick={() => setActiveTab('profile')}
             title="क्लिक करके प्रोफाइल एडिट करें"
+            onError={(e) => { e.target.src = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'; }}
           />
           <button
             type="button"
@@ -2162,8 +2164,18 @@ const StudentDashboard = () => {
           <form onSubmit={handleProfileUpdate}>
             <div style={{ marginBottom: '16px' }}>
               <label style={labelStyle}>📷 प्रोफाइल फोटो अपलोड करें:</label>
-              <input type="file" accept="image/*" onChange={handleFileChange} style={{ width: '100%', padding: '8px', marginTop: '4px' }} />
-              {currentUser?.avatar && <p style={{ fontSize: '12px', color: '#166534', margin: '4px 0 0 0' }}>✔ पहले से फोटो अपलोड है</p>}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '6px' }}>
+                <img 
+                  src={getImageSrc(currentUser?.avatar) || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} 
+                  alt="Avatar Preview" 
+                  style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #e8b35a' }}
+                  onError={(e) => { e.target.src = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'; }}
+                />
+                <div style={{ flex: 1 }}>
+                  <input type="file" accept="image/*" onChange={handleFileChange} style={{ width: '100%', padding: '6px', boxSizing: 'border-box' }} />
+                  {currentUser?.avatar && <p style={{ fontSize: '12px', color: '#166534', margin: '4px 0 0 0' }}>✔ वर्तमान में फोटो सक्रिय है</p>}
+                </div>
+              </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
