@@ -5,6 +5,7 @@ import IDCard from '../components/IDCard';
 
 import CertificatesPage from './CertificatesPage';
 import VideoPlayerModal from '../components/VideoPlayerModal';
+import FestivalMessagePortal from '../components/FestivalMessagePortal';
 import { useLocation } from 'react-router-dom';
 
 const StudentDashboard = () => {
@@ -817,7 +818,7 @@ const StudentDashboard = () => {
         <button onClick={() => setActiveTab('idcard')} style={tabBtnStyle(activeTab === 'idcard')}>🪪 डिजिटल ID कार्ड</button>
         <button onClick={() => setActiveTab('recordings')} style={tabBtnStyle(activeTab === 'recordings')}>▶️ रिकॉर्डिंग्स आर्काइव</button>
         <button onClick={() => setActiveTab('opportunities')} style={tabBtnStyle(activeTab === 'opportunities')}>🎯 अवसर व परीक्षाएं</button>
-        <button onClick={() => setActiveTab('community')} style={tabBtnStyle(activeTab === 'community')}>📢 कम्युनिटी फ़ीड</button>
+        <button onClick={() => setActiveTab('community')} style={tabBtnStyle(activeTab === 'community')}>🌸 पर्व व विशेष संदेश</button>
         <button onClick={() => setActiveTab('certificates')} style={tabBtnStyle(activeTab === 'certificates')}>🏆 सर्टिफिकेट्स</button>
         <button onClick={() => setActiveTab('feedback')} style={tabBtnStyle(activeTab === 'feedback')}>💬 फ़ीडबैक दें</button>
       </div>
@@ -2037,109 +2038,9 @@ const StudentDashboard = () => {
       )}
 
       {/* Community Feed & Post Creator (Step 7 Blueprint) */}
+      {/* Festival & Special Messages View */}
       {activeTab === 'community' && (
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <div>
-              <h3 style={{ margin: 0, color: '#0f172a' }}>📢 कम्युनिटी फ़ीड व संवाद मंच</h3>
-              <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#64748b' }}>
-                अपने विचार, प्रश्न या सीखने के अनुभव साझा करें। सुरक्षित वातावरण के लिए सभी पोस्ट एडमिन अनुमोदन के बाद ही दिखेंगी।
-              </p>
-            </div>
-          </div>
-
-          {postMsg && (
-            <div style={{ padding: '12px 16px', background: '#dcfce7', color: '#166534', borderRadius: '8px', marginBottom: '16px', fontWeight: 'bold', fontSize: '13px' }}>
-              {postMsg}
-            </div>
-          )}
-
-          {/* New Post Form Box */}
-          <div style={{ background: '#fff', padding: '18px', borderRadius: '12px', border: '1px solid #cbd5e1', marginBottom: '24px', boxShadow: '0 2px 6px rgba(0,0,0,0.04)' }}>
-            <h4 style={{ margin: '0 0 12px 0', color: '#1e3a8a', fontSize: '15px' }}>✍️ नया पोस्ट बनाएं (Create Post):</h4>
-            <form onSubmit={handleCreateCommunityPost} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <input 
-                  type="text" 
-                  placeholder="पोस्ट का शीर्षक (Title)..." 
-                  value={postForm.title} 
-                  onChange={(e) => setPostForm({ ...postForm, title: e.target.value })} 
-                  required 
-                  style={{ flex: 2, padding: '9px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px' }} 
-                />
-                <select 
-                  value={postForm.category} 
-                  onChange={(e) => setPostForm({ ...postForm, category: e.target.value })} 
-                  style={{ flex: 1, padding: '9px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px' }}
-                >
-                  <option value="जिज्ञासा / सवाल">❓ जिज्ञासा / सवाल</option>
-                  <option value="मेरी सीख">💡 मेरी सीख (Learnings)</option>
-                  <option value="सफलता की कहानी">🏆 सफलता की कहानी</option>
-                  <option value="सामान्य विचार">💬 सामान्य विचार</option>
-                </select>
-              </div>
-              <textarea 
-                rows="3" 
-                placeholder="यहाँ अपना विचार, सवाल या अनुभव लिखें..." 
-                value={postForm.content} 
-                onChange={(e) => setPostForm({ ...postForm, content: e.target.value })} 
-                required 
-                style={{ padding: '10px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', resize: 'vertical' }} 
-              />
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '11px', color: '#64748b' }}>
-                  🔒 सुरक्षित मॉडरेशन: सबमिट करने पर पोस्ट एडमिन रिव्यू कतार में जाएगी।
-                </span>
-                <button 
-                  type="submit" 
-                  disabled={postingLoading} 
-                  className="dashboard-btn-gold"
-                  style={{ padding: '9px 20px', fontSize: '13px' }}
-                >
-                  {postingLoading ? 'भेजा जा रहा है...' : '🚀 पोस्ट सबमिट करें'}
-                </button>
-              </div>
-            </form>
-          </div>
-
-          {/* Approved Posts Stream */}
-          <h4 style={{ margin: '0 0 14px 0', color: '#173d35', fontFamily: 'Georgia, serif' }}>🌟 स्वीकृत कम्युनिटी पोस्ट्स ({communityPosts.length})</h4>
-          {communityPosts.length === 0 ? (
-            <p style={{ color: '#547664', fontSize: '13px' }}>अभी कोई स्वीकृत पोस्ट नहीं है। सबसे पहले आप पोस्ट करें!</p>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {communityPosts.map(p => (
-                <div key={p._id} className="dashboard-card">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <div>
-                      <span style={{ fontWeight: 'bold', color: '#173d35', fontSize: '14px' }}>{p.authorName}</span>
-                      <span className="dashboard-badge dashboard-badge-mint" style={{ marginLeft: '8px', textTransform: 'capitalize' }}>
-                        {p.authorRole}
-                      </span>
-                    </div>
-                    <span style={{ fontSize: '11px', color: '#94a3b8' }}>
-                      {p.createdAt ? new Date(p.createdAt).toLocaleDateString('hi-IN') : ''}
-                    </span>
-                  </div>
-                  <h4 style={{ margin: '6px 0', color: '#173d35', fontFamily: 'Georgia, serif', fontSize: '16px' }}>{p.title}</h4>
-                  <p style={{ margin: 0, color: '#20332b', fontSize: '13.5px', lineHeight: 1.6 }}>{p.content}</p>
-                  
-                  <div style={{ marginTop: '14px', display: 'flex', alignItems: 'center', gap: '12px', borderTop: '1px solid #e2ebe4', paddingTop: '10px' }}>
-                    <button 
-                      onClick={() => handleLikePost(p._id)} 
-                      style={{ background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '13px', color: '#dc2626', fontWeight: 'bold' }}
-                    >
-                      ❤️ {p.likesCount || 0} लाइक्स
-                    </button>
-                    <span style={{ fontSize: '12px', color: '#547664' }}>
-                      💬 {p.comments ? p.comments.filter(c => c.status === 'approved').length : 0} टिप्पणियां
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <FestivalMessagePortal user={currentUser} />
       )}
 
       {/* Digital ID Card View */}

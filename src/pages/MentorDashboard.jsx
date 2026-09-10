@@ -5,6 +5,7 @@ import CertificatesPage from './CertificatesPage';
 
 import IDCard from '../components/IDCard';
 import VideoPlayerModal from '../components/VideoPlayerModal';
+import FestivalMessagePortal from '../components/FestivalMessagePortal';
 import { useLocation } from 'react-router-dom';
 
 const getTodayDateString = () => {
@@ -495,6 +496,9 @@ const MentorDashboard = () => {
         </button>
         <button onClick={() => setActiveTab('profile')} style={tabBtnStyle(activeTab === 'profile')}>
           ✏️ एडिट प्रोफाइल
+        </button>
+        <button onClick={() => setActiveTab('festivals')} style={tabBtnStyle(activeTab === 'festivals')}>
+          🌸 पर्व व विशेष संदेश
         </button>
         <button onClick={() => setActiveTab('feedback')} style={tabBtnStyle(activeTab === 'feedback')}>
           💬 फ़ीडबैक दें
@@ -1541,6 +1545,11 @@ const MentorDashboard = () => {
             </button>
           </form>
         </div>
+      )}
+
+      {/* TAB 8: FESTIVAL & SPECIAL MESSAGES */}
+      {activeTab === 'festivals' && (
+        <FestivalMessagePortal user={user} />
       )}
 
     </div>

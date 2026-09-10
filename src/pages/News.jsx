@@ -23,20 +23,75 @@ const News = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  const [likedPosts, setLikedPosts] = useState({});
+
   const fetchAnnouncements = async () => {
     try {
       setLoading(true);
-      // Fetch all posts and filter for News & Notices (exclude Events, Workshops, Competitions)
-      const res = await API.get('/posts/all');
-      const list = (res.data || []).filter((item) => {
+      // Fetch all official announcements AND approved festival/community posts
+      const [eventsRes, communityRes] = await Promise.all([
+        API.get('/posts/all').catch(() => ({ data: [] })),
+        API.get('/community-posts/approved').catch(() => ({ data: [] }))
+      ]);
+
+      const adminAnnouncements = (eventsRes.data || []).filter((item) => {
         const cat = item.category || '';
         return cat !== 'Event' && cat !== 'Workshop' && cat !== 'Contest' && cat !== 'Competition' && cat !== 'Debate';
       });
-      setAnnouncements(list);
+
+      // Format community posts (approved festival & special messages from students/mentors)
+      const communityAnnouncements = (communityRes.data || []).map(cp => ({
+        _id: cp._id,
+        title: cp.title,
+        description: cp.content,
+        eventDate: cp.createdAt,
+        category: 'विशेष संदेश व पर्व',
+        originalCategory: cp.category,
+        imageUrl: cp.mediaUrl,
+        location: '',
+        isCommunityPost: true,
+        authorName: cp.authorName,
+        authorRole: cp.authorRole,
+        authorAvatar: cp.authorAvatar,
+        likesCount: Array.isArray(cp.likes) ? cp.likes.length : (cp.likesCount || 0),
+        likes: cp.likes || [],
+        createdAt: cp.createdAt
+      }));
+
+      // Combine and sort newest first
+      const combined = [...adminAnnouncements, ...communityAnnouncements].sort((a, b) => {
+        const dateA = new Date(a.eventDate || a.createdAt || 0).getTime();
+        const dateB = new Date(b.eventDate || b.createdAt || 0).getTime();
+        return dateB - dateA;
+      });
+
+      setAnnouncements(combined);
     } catch (err) {
       console.error('Failed to fetch announcements:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLikeCommunityPost = async (postId) => {
+    try {
+      // Get or create persistent visitor ID for anonymous/student likes
+      let visitorId = localStorage.getItem('au_visitor_id');
+      if (!visitorId) {
+        visitorId = 'v_' + Math.random().toString(36).substring(2, 11);
+        localStorage.setItem('au_visitor_id', visitorId);
+      }
+
+      const res = await API.post(`/community-posts/${postId}/like`, { userId: visitorId });
+      setAnnouncements(prev => prev.map(item => {
+        if (item._id === postId) {
+          return { ...item, likesCount: res.data.likesCount };
+        }
+        return item;
+      }));
+      setLikedPosts(prev => ({ ...prev, [postId]: res.data.isLiked }));
+    } catch (err) {
+      console.error('Failed to toggle like:', err);
     }
   };
 
@@ -93,7 +148,8 @@ const News = () => {
       const matchTitle = (item.title || '').toLowerCase().includes(q);
       const matchDesc = (item.description || '').toLowerCase().includes(q);
       const matchLoc = (item.location || '').toLowerCase().includes(q);
-      return matchTitle || matchDesc || matchLoc;
+      const matchAuthor = (item.authorName || '').toLowerCase().includes(q);
+      return matchTitle || matchDesc || matchLoc || matchAuthor;
     }
 
     return true;
@@ -337,6 +393,28 @@ const News = () => {
                           {isFestivalOrSpecial ? '🌸' : '📌'} {item.category || 'आधिकारिक सूचना'}
                         </span>
 
+                        {/* Community / Festival Sender Attribution */}
+                        {item.isCommunityPost && item.authorName && (
+                          <span style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                            padding: '4px 12px',
+                            borderRadius: '16px',
+                            fontSize: '11.5px',
+                            fontWeight: '700',
+                            background: '#fef3c7',
+                            color: '#92400e',
+                            border: '1px solid #fde68a'
+                          }}>
+                            <span>🌸 प्रेषक:</span>
+                            <span>{item.authorName}</span>
+                            <span style={{ fontSize: '10px', background: '#d97706', color: '#ffffff', padding: '1px 6px', borderRadius: '8px' }}>
+                              {item.authorRole === 'mentor' ? 'मेंटर' : item.authorRole === 'student' ? 'विद्यार्थी' : 'सदस्य'}
+                            </span>
+                          </span>
+                        )}
+
                         {/* Audience Chip */}
                         {item.targetAudience && item.targetAudience !== 'Open to All' && (
                           <span style={{
@@ -456,6 +534,30 @@ const News = () => {
                             }}
                           >
                             🖼️ पोस्टर देखें
+                          </button>
+                        )}
+
+                        {/* Community Post Like Button */}
+                        {item.isCommunityPost && (
+                          <button
+                            onClick={() => handleLikeCommunityPost(item._id)}
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px',
+                              padding: '8px 14px',
+                              background: likedPosts[item._id] ? '#fee2e2' : '#f8fafc',
+                              color: '#dc2626',
+                              border: '1px solid #fecaca',
+                              borderRadius: '6px',
+                              fontSize: '13px',
+                              fontWeight: '700',
+                              cursor: 'pointer',
+                              transition: 'all 0.15s ease'
+                            }}
+                          >
+                            <span>❤️</span>
+                            <span>{item.likesCount || 0} लाइक्स</span>
                           </button>
                         )}
                       </div>
