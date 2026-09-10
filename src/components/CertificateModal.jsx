@@ -933,7 +933,7 @@ export default function CertificateModal({ isOpen, onClose, certificate }) {
             />
 
             {/* SECTION A: REGAL HEADER */}
-            <div style={{ position: 'relative', zIndex: 2, marginTop: '25px', marginBottom: '4px' }}>
+            <div style={{ position: 'relative', zIndex: 2, marginTop: '27px', marginBottom: '4px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', width: '100%' }}>
                 {/* Left Circular NGO Logo */}
                 <div
@@ -963,13 +963,14 @@ export default function CertificateModal({ isOpen, onClose, certificate }) {
                   <h2
                     style={{
                       margin: '0 0 2px 0',
-                      paddingTop: '6px',
-                      fontSize: '25px',
+                      paddingTop: '8px',
+                      fontSize: '26px',
                       color: currentTheme.primaryText,
                       fontFamily: "'Noto Sans Devanagari', 'Poppins', 'Playfair Display', Georgia, serif",
                       fontWeight: '900',
-                      letterSpacing: '1px',
-                      lineHeight: 1.35
+                      letterSpacing: '1.2px',
+                      lineHeight: 1.4,
+                      textAlign: 'center'
                     }}
                   >
                     अव्युक्त उत्थान संस्था
@@ -982,24 +983,12 @@ export default function CertificateModal({ isOpen, onClose, certificate }) {
                       textTransform: 'uppercase',
                       fontWeight: '800',
                       display: 'block',
-                      margin: '2px 0 3px 0',
-                      fontFamily: "'Cinzel', serif"
+                      margin: '2px 0 0 0',
+                      fontFamily: "'Cinzel', serif",
+                      textAlign: 'center'
                     }}
                   >
                     Avyukt Utthan Sanstha
-                  </span>
-                  <span
-                    style={{
-                      fontSize: '8.5px',
-                      color: currentTheme.subText,
-                      letterSpacing: '0.8px',
-                      display: 'block',
-                      textTransform: 'uppercase',
-                      fontFamily: "'Montserrat', sans-serif",
-                      fontWeight: '600'
-                    }}
-                  >
-                    Regd. Under Societies Registration Act XXI of 1860 · Hazaribagh, Jharkhand (India)
                   </span>
                 </div>
               </div>
@@ -1282,7 +1271,7 @@ export default function CertificateModal({ isOpen, onClose, certificate }) {
                   fontWeight: '600'
                 }}
               >
-                VERIFICATION ID: <strong style={{ color: currentTheme.primaryText }}>AU-{certificate.uniqueCertId || certificate._id?.slice(-8).toUpperCase() || 'CERT'}</strong> · VALIDATE AT: <strong style={{ color: currentTheme.primaryText }}>portal.avyukt.org/verify</strong> · REGISTERED CHARITABLE SOCIETY
+                VERIFICATION ID: <strong style={{ color: currentTheme.primaryText }}>AU-{certificate.uniqueCertId || certificate._id?.slice(-8).toUpperCase() || 'CERT'}</strong> · VALIDATE AT: <strong style={{ color: currentTheme.primaryText }}>Avyukt Utthan Sanstha</strong>
               </span>
             </div>
           </div>
