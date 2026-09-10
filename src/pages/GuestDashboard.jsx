@@ -1346,34 +1346,73 @@ const GuestDashboard = () => {
             </form>
 
             <div style={{ marginTop: '28px', borderTop: '1px solid #e2ebe4', paddingTop: '18px' }}>
-              <h4 style={{ margin: '0 0 12px 0', color: '#173d35', fontFamily: 'Georgia, serif', fontSize: '16px' }}>जारी किए गए प्रमाणपत्र:</h4>
-              {certificates.length === 0 ? (
-                <p style={{ fontSize: '13px', color: '#718078', margin: 0 }}>अभी कोई प्रमाणपत्र जारी नहीं हुआ है।</p>
+              <h4 style={{ margin: '0 0 12px 0', color: '#173d35', fontFamily: 'Georgia, serif', fontSize: '16px' }}>
+                🏆 जारी किए गए प्रमाणपत्र (Approved Certificates):
+              </h4>
+              {certificates.filter((c) => c.status === 'approved').length === 0 ? (
+                <p style={{ fontSize: '13px', color: '#718078', margin: '0 0 16px 0' }}>अभी कोई स्वीकृत प्रमाणपत्र जारी नहीं हुआ है।</p>
               ) : (
-                <div style={{ display: 'grid', gap: '8px' }}>
-                  {certificates.map((cert) => (
-                    <div key={cert._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', background: '#f8faf9', borderRadius: '8px', border: '1px solid #e2ebe4', fontSize: '13px' }}>
-                      <strong>{cert.title}</strong>
-                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                        <span className={`dashboard-badge ${cert.status === 'approved' ? 'badge-mint' : 'badge-gold'}`} style={{ fontSize: '11px' }}>
-                          {cert.status === 'approved' ? 'जारी' : 'स्वीकृति लंबित'}
-                        </span>
-                        {cert.status === 'approved' && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setSelectedCert(cert);
-                              setIsCertModalOpen(true);
-                            }}
-                            className="dashboard-btn-gold"
-                            style={{ padding: '4px 10px', fontSize: '11.5px', display: 'inline-flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
-                          >
-                            👁️ देखें व डाउनलोड (PDF)
-                          </button>
-                        )}
+                <div style={{ display: 'grid', gap: '8px', marginBottom: '16px' }}>
+                  {certificates.filter((c) => c.status === 'approved').map((cert) => (
+                    <div key={cert._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', background: '#f8faf9', borderRadius: '8px', border: '1px solid #bbf7d0', fontSize: '13px' }}>
+                      <div>
+                        <strong>{cert.title}</strong>
+                        <span className="dashboard-badge badge-mint" style={{ fontSize: '10.5px', marginLeft: '6px' }}>{cert.category}</span>
                       </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedCert(cert);
+                          setIsCertModalOpen(true);
+                        }}
+                        className="dashboard-btn-gold"
+                        style={{ padding: '4px 10px', fontSize: '11.5px', display: 'inline-flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
+                      >
+                        👁️ देखें व डाउनलोड (PDF)
+                      </button>
                     </div>
                   ))}
+                </div>
+              )}
+
+              {/* Pending Requests */}
+              {certificates.filter((c) => c.status === 'pending').length > 0 && (
+                <div style={{ marginTop: '16px', borderTop: '1px dashed #fde68a', paddingTop: '14px' }}>
+                  <h5 style={{ margin: '0 0 10px 0', color: '#92400e', fontSize: '13.5px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    ⏳ समीक्षाधीन आवेदन (Under Admin Review):
+                  </h5>
+                  <div style={{ display: 'grid', gap: '8px' }}>
+                    {certificates.filter((c) => c.status === 'pending').map((cert) => (
+                      <div key={cert._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 12px', background: '#fffbeb', borderRadius: '8px', border: '1px solid #fde68a', fontSize: '12.5px' }}>
+                        <div>
+                          <strong style={{ color: '#78350f' }}>{cert.title}</strong>
+                          <span style={{ fontSize: '11px', color: '#92400e', marginLeft: '6px' }}>({cert.category})</span>
+                        </div>
+                        <span className="dashboard-badge badge-gold" style={{ fontSize: '10.5px' }}>
+                          🟡 स्वीकृति लंबित
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Rejected Requests */}
+              {certificates.filter((c) => c.status === 'rejected').length > 0 && (
+                <div style={{ marginTop: '16px', borderTop: '1px dashed #fecaca', paddingTop: '14px' }}>
+                  <h5 style={{ margin: '0 0 10px 0', color: '#991b1b', fontSize: '13.5px' }}>
+                    ❌ अस्वीकृत आवेदन (Rejected):
+                  </h5>
+                  <div style={{ display: 'grid', gap: '8px' }}>
+                    {certificates.filter((c) => c.status === 'rejected').map((cert) => (
+                      <div key={cert._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 12px', background: '#fef2f2', borderRadius: '8px', border: '1px solid #fecaca', fontSize: '12.5px' }}>
+                        <span style={{ fontWeight: '600', color: '#991b1b' }}>{cert.title}</span>
+                        <span className="dashboard-badge badge-rose" style={{ fontSize: '10.5px' }}>
+                          🔴 {cert.remarks || 'अस्वीकृत'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

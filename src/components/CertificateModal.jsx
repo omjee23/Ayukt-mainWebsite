@@ -348,6 +348,28 @@ export default function CertificateModal({ isOpen, onClose, certificate }) {
 
   if (!isOpen || !certificate) return null;
 
+  // Security guard: Only approved certificates can be viewed and downloaded
+  if (certificate.status && certificate.status !== 'approved') {
+    return (
+      <div style={{ position: 'fixed', inset: 0, zIndex: 99999, backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+        <div style={{ background: '#fff', borderRadius: '12px', padding: '28px', maxWidth: '420px', width: '100%', textAlign: 'center', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3)' }}>
+          <span style={{ fontSize: '42px', display: 'block', marginBottom: '12px' }}>⏳</span>
+          <h3 style={{ margin: '0 0 10px 0', color: '#173d35', fontFamily: 'Georgia, serif', fontSize: '20px' }}>समीक्षाधीन प्रमाणपत्र</h3>
+          <p style={{ color: '#64748b', fontSize: '13.5px', lineHeight: '1.6', margin: 0 }}>
+            यह प्रमाणपत्र अभी एडमिन द्वारा स्वीकृत (Approved) नहीं हुआ है। संस्था के एडमिन द्वारा अनुमोदन मिलने के बाद ही आधिकारिक प्रमाणपत्र यहाँ प्रदर्शित व डाउनलोड किया जा सकेगा।
+          </p>
+          <button 
+            onClick={onClose} 
+            className="dashboard-btn-secondary" 
+            style={{ marginTop: '20px', width: '100%', justifyContent: 'center', padding: '10px' }}
+          >
+            बंद करें (Close)
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const handleDownloadPDF = async () => {
     if (!certRef.current) return;
     try {
