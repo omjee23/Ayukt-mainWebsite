@@ -473,8 +473,8 @@ const StudentDashboard = () => {
         name: currentUser.name || '',
         email: currentUser.email || '',
         phone: currentUser.phone || currentUser.whatsappPhone || currentUser.callingPhone || '',
-        studentClass: currentUser.studentClass || currentUser.class || '',
-        schoolName: currentUser.schoolName || currentUser.school || currentUser.collegeOrOrganization || currentUser.college || '',
+        studentClass: currentUser.studentClass || currentUser.class || currentUser.classGrade || '',
+        schoolName: currentUser.schoolName || currentUser.school || currentUser.collegeName || currentUser.collegeOrOrganization || currentUser.college || '',
         villageName: currentUser.villageName || currentUser.village || '',
         district: currentUser.district || '',
         instagram: currentUser.instagram || '',
@@ -659,9 +659,14 @@ const StudentDashboard = () => {
     background: '#ffffff'
   };
 
-  const studentIdDisplay = currentUser?.customId || currentUser?._id?.slice(-6)?.toUpperCase() || 'STUDENT-001';
-  const studentClassDisplay = currentUser?.classGrade || 'कक्षा निर्धारित नहीं';
-  const schoolOrCollegeDisplay = currentUser?.schoolName || currentUser?.school || currentUser?.collegeOrOrganization || currentUser?.college || 'स्कूल/कॉलेज का नाम दर्ज करें';
+  const studentIdDisplay = currentUser?.uniqueId || currentUser?.studentId || currentUser?.customId || (currentUser?._id ? `STU-${currentUser._id.slice(-6).toUpperCase()}` : 'STUDENT-001');
+  const rawClass = currentUser?.studentClass || currentUser?.class || currentUser?.classGrade;
+  const studentClassDisplay = rawClass 
+    ? (String(rawClass).toLowerCase().includes('class') || String(rawClass).includes('कक्षा') 
+        ? rawClass 
+        : `${rawClass}${String(rawClass).match(/^\d+$/) ? 'th' : ''}`) 
+    : 'कक्षा निर्धारित नहीं';
+  const schoolOrCollegeDisplay = currentUser?.schoolName || currentUser?.school || currentUser?.collegeName || currentUser?.collegeOrOrganization || currentUser?.college || 'स्कूल/कॉलेज का नाम दर्ज करें';
 
   return (
     <div className="dashboard-container">

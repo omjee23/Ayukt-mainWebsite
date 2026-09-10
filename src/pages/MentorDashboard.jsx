@@ -218,7 +218,7 @@ const MentorDashboard = () => {
         name: currentUser.name || '',
         email: currentUser.email || '',
         phone: currentUser.phone || currentUser.whatsappPhone || '',
-        collegeOrOrganization: currentUser.collegeOrOrganization || currentUser.college || '',
+        collegeOrOrganization: currentUser.collegeName || currentUser.collegeOrOrganization || currentUser.college || '',
         villageName: currentUser.villageName || currentUser.village || '',
         district: currentUser.district || '',
         instagram: currentUser.instagram || '',
@@ -351,6 +351,8 @@ const MentorDashboard = () => {
       const updateRes = await API.put('/auth/update-profile', {
         userId: currentUserId,
         ...profileForm,
+        collegeName: profileForm.collegeOrOrganization,
+        collegeOrOrganization: profileForm.collegeOrOrganization,
         avatar: avatarUrl
       });
 
@@ -434,7 +436,8 @@ const MentorDashboard = () => {
     }
   };
 
-  const mentorIdDisplay = currentUser?.uniqueMentorId || currentUser?.mentorId || currentUser?.uniqueId || 'VOLUNTEER';
+  const mentorIdDisplay = currentUser?.uniqueMentorId || currentUser?.mentorId || currentUser?.uniqueId || currentUser?.customId || 'Avyukt@M0001';
+  const mentorCollegeDisplay = currentUser?.collegeName || currentUser?.collegeOrOrganization || currentUser?.college || currentUser?.schoolName || currentUser?.school || 'अव्युक्त मेंटॉर नेटवर्क';
 
   return (
     <div className="dashboard-container">
@@ -462,7 +465,7 @@ const MentorDashboard = () => {
               <strong>Mentor ID:</strong> {mentorIdDisplay}
             </span>
             <span className="dashboard-hero-badge" style={{ background: 'rgba(232, 179, 90, 0.18)' }}>
-              🏛️ {currentUser?.collegeOrOrganization || currentUser?.college || 'अव्युक्त मेंटॉर नेटवर्क'}
+              🏛️ {mentorCollegeDisplay}
             </span>
           </div>
         </div>
