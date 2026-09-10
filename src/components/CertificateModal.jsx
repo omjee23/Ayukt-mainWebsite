@@ -867,7 +867,7 @@ export default function CertificateModal({ isOpen, onClose, certificate }) {
             </div>
 
             {/* 5. HORIZONTAL SOHRAI & KHOVAR GUILLOCHE FRIEZE (Top & Bottom) */}
-            <div style={{ position: 'absolute', top: '15px', left: '92px', right: '92px', zIndex: 3, pointerEvents: 'none' }}>
+            <div style={{ position: 'absolute', top: '12px', left: '92px', right: '92px', zIndex: 3, pointerEvents: 'none' }}>
               <SohraiKhovarGuillocheFrieze width={620} />
             </div>
 
@@ -911,13 +911,13 @@ export default function CertificateModal({ isOpen, onClose, certificate }) {
             />
 
             {/* SECTION A: REGAL HEADER */}
-            <div style={{ position: 'relative', zIndex: 2, marginTop: '12px', marginBottom: '4px' }}>
+            <div style={{ position: 'relative', zIndex: 2, marginTop: '25px', marginBottom: '4px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', width: '100%' }}>
                 {/* Left Circular NGO Logo */}
                 <div
                   style={{
                     position: 'absolute',
-                    left: '28px',
+                    left: '26px',
                     top: '50%',
                     transform: 'translateY(-50%)',
                     width: '54px',
@@ -937,15 +937,16 @@ export default function CertificateModal({ isOpen, onClose, certificate }) {
                 </div>
 
                 {/* Centered NGO Name & Subtitles */}
-                <div style={{ textAlign: 'center', padding: '0 85px', width: '100%' }}>
+                <div style={{ textAlign: 'center', width: '100%', boxSizing: 'border-box', padding: '0 85px', margin: '0 auto' }}>
                   <h2
                     style={{
-                      margin: '0 0 3px 0',
+                      margin: '0 0 2px 0',
+                      paddingTop: '6px',
                       fontSize: '25px',
                       color: currentTheme.primaryText,
                       fontFamily: "'Noto Sans Devanagari', 'Poppins', 'Playfair Display', Georgia, serif",
                       fontWeight: '900',
-                      letterSpacing: '0.8px',
+                      letterSpacing: '1px',
                       lineHeight: 1.35
                     }}
                   >
