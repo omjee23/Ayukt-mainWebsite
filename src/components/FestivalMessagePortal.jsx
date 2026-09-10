@@ -93,8 +93,11 @@ export default function FestivalMessagePortal({ user }) {
       formData.append('authorId', userId);
       formData.append('authorName', userName);
       formData.append('authorRole', userRole);
-      if (user?.avatar) {
-        formData.append('authorAvatar', user.avatar);
+      if (user?.avatar && typeof user.avatar === 'string') {
+        // Only send authorAvatar if it is a short path/URL, not a multi-megabyte base64 string
+        if (!user.avatar.startsWith('data:') || user.avatar.length < 100000) {
+          formData.append('authorAvatar', user.avatar);
+        }
       }
 
       if (imageFile) {
