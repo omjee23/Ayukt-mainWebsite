@@ -6,6 +6,9 @@ import IDCard from '../components/IDCard';
 import CertificatesPage from './CertificatesPage';
 import VideoPlayerModal from '../components/VideoPlayerModal';
 import FestivalMessagePortal from '../components/FestivalMessagePortal';
+import OpportunitiesView from '../components/OpportunitiesView';
+import StudyMaterialsView from '../components/StudyMaterialsView';
+import DiscussionForumView from '../components/DiscussionForumView';
 import { useLocation } from 'react-router-dom';
 
 const StudentDashboard = () => {
@@ -823,6 +826,8 @@ const StudentDashboard = () => {
         <button onClick={() => setActiveTab('idcard')} style={tabBtnStyle(activeTab === 'idcard')}>🪪 डिजिटल ID कार्ड</button>
         <button onClick={() => setActiveTab('recordings')} style={tabBtnStyle(activeTab === 'recordings')}>▶️ रिकॉर्डिंग्स आर्काइव</button>
         <button onClick={() => setActiveTab('opportunities')} style={tabBtnStyle(activeTab === 'opportunities')}>🎯 अवसर व परीक्षाएं</button>
+        <button onClick={() => setActiveTab('materials')} style={tabBtnStyle(activeTab === 'materials')}>📚 स्टडी मटेरियल व PYQ</button>
+        <button onClick={() => setActiveTab('forum')} style={tabBtnStyle(activeTab === 'forum')}>💬 डाउट फ़ोरम</button>
         <button onClick={() => setActiveTab('community')} style={tabBtnStyle(activeTab === 'community')}>🌸 पर्व व विशेष संदेश</button>
         <button onClick={() => setActiveTab('certificates')} style={tabBtnStyle(activeTab === 'certificates')}>🏆 सर्टिफिकेट्स</button>
         <button onClick={() => setActiveTab('feedback')} style={tabBtnStyle(activeTab === 'feedback')}>💬 फ़ीडबैक दें</button>
@@ -1976,70 +1981,19 @@ const StudentDashboard = () => {
         );
       })()}
 
-      {/* External Exams & Opportunities Bulletin (Step 7 Blueprint) */}
+      {/* External Exams & Opportunities Bulletin */}
       {activeTab === 'opportunities' && (
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <div>
-              <h3 style={{ margin: 0, color: '#0f172a' }}>🎯 प्रतियोगी परीक्षाएं व अवसर बुलेटिन (Exams & Opportunities)</h3>
-              <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#64748b' }}>
-                नवोदय विद्यालय, JEE, NEET, छात्रवृत्ति एवं राष्ट्रीय प्रतियोगिताओं के फॉर्म, पीडीएफ व दिशा-निर्देश।
-              </p>
-            </div>
-          </div>
+        <OpportunitiesView user={currentUser} canPost={false} themeColor="#2563eb" />
+      )}
 
-          {opportunities.length === 0 ? (
-            <div style={{ background: '#fff', padding: '30px', borderRadius: '10px', textAlign: 'center', border: '1px solid #e2e8f0' }}>
-              <span style={{ fontSize: '32px' }}>📢</span>
-              <p style={{ margin: '10px 0 0 0', color: '#64748b' }}>वर्तमान में कोई नई परीक्षा अधिसूचना प्रकाशित नहीं है।</p>
-            </div>
-          ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '16px' }}>
-              {opportunities.map((item) => {
-                const whatsappText = encodeURIComponent(`📢 *${item.title}*\n\n${item.description || ''}\n\nअव्युक्त फाउंडेशन पोर्टल से प्राप्त जानकारी: ${window.location.origin}`);
-                return (
-                  <div key={item._id} style={{ background: '#fff', border: '1px solid #cbd5e1', borderRadius: '12px', padding: '18px', boxShadow: '0 2px 6px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                    <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                        <span style={{ background: '#fef3c7', color: '#92400e', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold' }}>
-                          🎓 {item.category || 'Exam / Opportunity'}
-                        </span>
-                        <span style={{ fontSize: '11px', color: '#64748b' }}>
-                          {item.eventDate ? new Date(item.eventDate).toLocaleDateString('hi-IN') : ''}
-                        </span>
-                      </div>
-                      <h4 style={{ margin: '6px 0 6px 0', fontSize: '16px', color: '#0f172a' }}>{item.title}</h4>
-                      <p style={{ margin: 0, fontSize: '13px', color: '#475569', lineHeight: 1.5 }}>
-                        {item.description}
-                      </p>
-                    </div>
+      {/* Study Materials & PYQ Sets */}
+      {activeTab === 'materials' && (
+        <StudyMaterialsView user={currentUser} canUpload={false} themeColor="#2563eb" />
+      )}
 
-                    <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      {item.driveUrl && (
-                        <a 
-                          href={item.driveUrl} 
-                          target="_blank" 
-                          rel="noreferrer" 
-                          style={{ padding: '8px 12px', background: '#f1f5f9', color: '#1e293b', borderRadius: '6px', textDecoration: 'none', fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-                        >
-                          📄 आधिकारिक नोटिफिकेशन (PDF / Drive)
-                        </a>
-                      )}
-                      <a 
-                        href={`https://api.whatsapp.com/send?text=${whatsappText}`} 
-                        target="_blank" 
-                        rel="noreferrer" 
-                        style={{ padding: '9px 12px', background: '#25d366', color: '#fff', borderRadius: '6px', textDecoration: 'none', fontSize: '13px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-                      >
-                        💬 व्हाट्सएप पर साझा करें (1-Click Share)
-                      </a>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
+      {/* Doubt Resolution & Discussion Forum */}
+      {activeTab === 'forum' && (
+        <DiscussionForumView user={currentUser} themeColor="#2563eb" />
       )}
 
       {/* Community Feed & Post Creator (Step 7 Blueprint) */}

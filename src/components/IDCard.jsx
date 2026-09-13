@@ -233,9 +233,11 @@ const IDCard = ({ user }) => {
                   <span style={valueStyle}>{user.collegeOrOrganization || user.collegeName || 'N/A'}</span>
                 </div>
                 <div style={infoRowStyle}>
-                  <span style={labelStyle}>Subjects:</span>
+                  <span style={labelStyle}>Main Subjects:</span>
                   <span style={valueStyle}>
-                    {Array.isArray(user.subjects) ? user.subjects.join(', ') : user.subjects || 'All Subjects'}
+                    {Array.isArray(user.subjects) && user.subjects.length > 0
+                      ? user.subjects.slice(0, 2).join(', ')
+                      : (user.subjects || 'N/A')}
                   </span>
                 </div>
               </>
@@ -255,16 +257,32 @@ const IDCard = ({ user }) => {
               </>
             )}
 
-            {/* Address Details */}
-            <div style={infoRowStyle}>
-              <span style={labelStyle}>Village/Town:</span>
-              <span style={valueStyle}>{user.villageName || user.village || 'N/A'}</span>
-            </div>
+            {/* Location & Address Details (Village, District, State) */}
+            {(user.villageName || user.village) && (
+              <div style={infoRowStyle}>
+                <span style={labelStyle}>Village/Town:</span>
+                <span style={valueStyle}>{user.villageName || user.village}</span>
+              </div>
+            )}
 
-            <div style={infoRowStyle}>
-              <span style={labelStyle}>District:</span>
-              <span style={valueStyle}>{user.district || 'Hazaribagh'}</span>
-            </div>
+            {user.district ? (
+              <div style={infoRowStyle}>
+                <span style={labelStyle}>District:</span>
+                <span style={valueStyle}>{user.district}</span>
+              </div>
+            ) : (!user.villageName && !user.village && (
+              <div style={infoRowStyle}>
+                <span style={labelStyle}>District:</span>
+                <span style={valueStyle}>N/A</span>
+              </div>
+            ))}
+
+            {(user.state || user.stateName) && (
+              <div style={infoRowStyle}>
+                <span style={labelStyle}>State:</span>
+                <span style={valueStyle}>{user.state || user.stateName}</span>
+              </div>
+            )}
 
             <div style={infoRowStyle}>
               <span style={labelStyle}>Contact:</span>

@@ -125,7 +125,7 @@ const Login = () => {
         </div>
         <h2 style={{ textAlign: 'center', color: '#0f172a', marginBottom: '8px' }}>लॉगिन करें (Login)</h2>
         <p style={{ textAlign: 'center', color: '#64748b', fontSize: '13px', marginBottom: '24px' }}>
-          अपनी <strong>Login ID / Unique ID</strong> (जैसे: Avyukt@S001 / Avyukt@M0001) दर्ज करें
+          अपनी <strong>Login ID / Unique ID</strong> (जैसे: Avyukt@S482 / Avyukt@M3914 / Avyukt@V837) दर्ज करें
         </p>
 
         {errorMsg && <div style={errorAlertStyle}>⚠️ {errorMsg}</div>}
@@ -142,7 +142,7 @@ const Login = () => {
               onChange={(e) => setIdentifier(e.target.value)}
               required
               style={inputStyle}
-              placeholder="e.g. Avyukt@S001 या Avyukt@M0001"
+              placeholder="e.g. Avyukt@S482 या Avyukt@M3914"
             />
           </div>
 

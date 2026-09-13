@@ -307,7 +307,7 @@ const VolunteerDashboard = () => {
     }
   };
 
-  const volunteerIdDisplay = currentUser?.volunteerId || currentUser?.uniqueVolunteerId || currentUser?.uniqueId || (currentUserId ? `VOL-${currentUserId.substring(0, 6).toUpperCase()}` : 'VOLUNTEER');
+  const volunteerIdDisplay = currentUser?.uniqueId || currentUser?.volunteerId || currentUser?.uniqueVolunteerId || (currentUserId ? `VOL-${currentUserId.substring(0, 6).toUpperCase()}` : 'VOLUNTEER');
 
   return (
     <div className="dashboard-container">

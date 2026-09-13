@@ -6,6 +6,9 @@ import CertificatesPage from './CertificatesPage';
 import IDCard from '../components/IDCard';
 import VideoPlayerModal from '../components/VideoPlayerModal';
 import FestivalMessagePortal from '../components/FestivalMessagePortal';
+import OpportunitiesView from '../components/OpportunitiesView';
+import StudyMaterialsView from '../components/StudyMaterialsView';
+import DiscussionForumView from '../components/DiscussionForumView';
 import { useLocation } from 'react-router-dom';
 
 const getTodayDateString = () => {
@@ -75,6 +78,8 @@ const MentorDashboard = () => {
     collegeOrOrganization: '',
     villageName: '',
     district: '',
+    state: '',
+    subjects: [],
     instagram: '',
     linkedin: '',
     snapchat: ''
@@ -221,6 +226,8 @@ const MentorDashboard = () => {
         collegeOrOrganization: currentUser.collegeName || currentUser.collegeOrOrganization || currentUser.college || '',
         villageName: currentUser.villageName || currentUser.village || '',
         district: currentUser.district || '',
+        state: currentUser.state || '',
+        subjects: Array.isArray(currentUser.subjects) ? currentUser.subjects : (currentUser.subjects ? [currentUser.subjects] : []),
         instagram: currentUser.instagram || '',
         linkedin: currentUser.linkedin || '',
         snapchat: currentUser.snapchat || ''
@@ -351,6 +358,11 @@ const MentorDashboard = () => {
       const updateRes = await API.put('/auth/update-profile', {
         userId: currentUserId,
         ...profileForm,
+        village: profileForm.villageName,
+        villageName: profileForm.villageName,
+        district: profileForm.district,
+        state: profileForm.state,
+        subjects: profileForm.subjects,
         collegeName: profileForm.collegeOrOrganization,
         collegeOrOrganization: profileForm.collegeOrOrganization,
         avatar: avatarUrl
@@ -436,7 +448,7 @@ const MentorDashboard = () => {
     }
   };
 
-  const mentorIdDisplay = currentUser?.uniqueMentorId || currentUser?.mentorId || currentUser?.uniqueId || currentUser?.customId || 'Avyukt@M0001';
+  const mentorIdDisplay = currentUser?.uniqueId || currentUser?.uniqueMentorId || currentUser?.mentorId || currentUser?.customId || 'Avyukt@M...';
   const mentorCollegeDisplay = currentUser?.collegeName || currentUser?.collegeOrOrganization || currentUser?.college || currentUser?.schoolName || currentUser?.school || 'अव्युक्त मेंटॉर नेटवर्क';
 
   return (
@@ -502,6 +514,15 @@ const MentorDashboard = () => {
         </button>
         <button onClick={() => setActiveTab('festivals')} style={tabBtnStyle(activeTab === 'festivals')}>
           🌸 पर्व व विशेष संदेश
+        </button>
+        <button onClick={() => setActiveTab('opportunities')} style={tabBtnStyle(activeTab === 'opportunities')}>
+          🎯 अवसर व परीक्षाएं
+        </button>
+        <button onClick={() => setActiveTab('materials')} style={tabBtnStyle(activeTab === 'materials')}>
+          📚 स्टडी मटेरियल व PYQ
+        </button>
+        <button onClick={() => setActiveTab('forum')} style={tabBtnStyle(activeTab === 'forum')}>
+          💬 डाउट फ़ोरम
         </button>
         <button onClick={() => setActiveTab('feedback')} style={tabBtnStyle(activeTab === 'feedback')}>
           💬 फ़ीडबैक दें
@@ -1452,13 +1473,165 @@ const MentorDashboard = () => {
             </div>
 
             <div style={{ marginBottom: '14px' }}>
-              <label style={labelStyle}>ग्राम (Village):</label>
-              <input type="text" value={profileForm.villageName} onChange={(e) => setProfileForm({ ...profileForm, villageName: e.target.value })} style={goldInputStyle} />
+              <label style={labelStyle}>ग्राम / कस्बा (Village / Town):</label>
+              <input type="text" value={profileForm.villageName} onChange={(e) => setProfileForm({ ...profileForm, villageName: e.target.value })} style={goldInputStyle} placeholder="अपना गाँव या कस्बा दर्ज करें" />
             </div>
 
             <div style={{ marginBottom: '14px' }}>
               <label style={labelStyle}>जिला (District):</label>
-              <input type="text" value={profileForm.district} onChange={(e) => setProfileForm({ ...profileForm, district: e.target.value })} style={goldInputStyle} />
+              <input type="text" value={profileForm.district} onChange={(e) => setProfileForm({ ...profileForm, district: e.target.value })} style={goldInputStyle} placeholder="अपना जिला दर्ज करें" />
+            </div>
+
+            <div style={{ marginBottom: '14px' }}>
+              <label style={labelStyle}>राज्य (State):</label>
+              <input type="text" value={profileForm.state || ''} onChange={(e) => setProfileForm({ ...profileForm, state: e.target.value })} style={goldInputStyle} placeholder="उदा. Jharkhand, Bihar, UP आदि" />
+            </div>
+
+            <div style={{ marginBottom: '16px' }}>
+              <label style={labelStyle}>
+                पढ़ाने के विषय (Subjects - ID कार्ड पर पहले 2 विषय दिखेंगे):
+              </label>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '8px' }}>
+                {[
+                  'Mathematics (गणित)',
+                  'Science (विज्ञान)',
+                  'English (अंग्रेजी)',
+                  'Hindi (हिंदी)',
+                  'Social Science (सामाजिक विज्ञान)',
+                  'Computer / Coding (कम्प्यूटर शिक्षा)',
+                  'Career Guidance & Soft Skills',
+                  'General Knowledge & Current Affairs',
+                  'Art, Music & Yoga'
+                ].map((sub) => {
+                  const isSelected = profileForm.subjects?.includes(sub);
+                  return (
+                    <button
+                      key={sub}
+                      type="button"
+                      onClick={() => {
+                        const current = Array.isArray(profileForm.subjects) ? profileForm.subjects : [];
+                        const updated = isSelected
+                          ? current.filter((s) => s !== sub)
+                          : [...current, sub];
+                        setProfileForm({ ...profileForm, subjects: updated });
+                      }}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '20px',
+                        border: isSelected ? '1.5px solid #d97706' : '1px solid #d1d5db',
+                        background: isSelected ? '#fef3c7' : '#f9fafb',
+                        color: isSelected ? '#92400e' : '#4b5563',
+                        fontSize: '13px',
+                        cursor: 'pointer',
+                        fontWeight: isSelected ? '700' : '500',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      {sub} {isSelected ? '✓' : '+'}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {profileForm.subjects?.filter((s) => ![
+                'Mathematics (गणित)',
+                'Science (विज्ञान)',
+                'English (अंग्रेजी)',
+                'Hindi (हिंदी)',
+                'Social Science (सामाजिक विज्ञान)',
+                'Computer / Coding (कम्प्यूटर शिक्षा)',
+                'Career Guidance & Soft Skills',
+                'General Knowledge & Current Affairs',
+                'Art, Music & Yoga'
+              ].includes(s)).map((customSub) => (
+                <button
+                  key={customSub}
+                  type="button"
+                  onClick={() => {
+                    setProfileForm({
+                      ...profileForm,
+                      subjects: profileForm.subjects.filter((s) => s !== customSub)
+                    });
+                  }}
+                  style={{
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    border: '1.5px solid #d97706',
+                    background: '#fef3c7',
+                    color: '#92400e',
+                    fontSize: '13px',
+                    cursor: 'pointer',
+                    fontWeight: '700',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    marginTop: '8px',
+                    marginRight: '8px'
+                  }}
+                >
+                  {customSub} ✓ (हटाएं ✕)
+                </button>
+              ))}
+
+              <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                <input
+                  type="text"
+                  placeholder="अन्य विषय जोड़ें (उदा. Sanskrit, Physics, etc.)..."
+                  id="mentor-dashboard-custom-sub"
+                  style={{ ...goldInputStyle, flex: 1, padding: '7px 12px', fontSize: '13px' }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      const val = e.target.value.trim();
+                      if (val) {
+                        const current = Array.isArray(profileForm.subjects) ? profileForm.subjects : [];
+                        if (!current.includes(val)) {
+                          setProfileForm({ ...profileForm, subjects: [...current, val] });
+                        }
+                        e.target.value = '';
+                      }
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('mentor-dashboard-custom-sub');
+                    if (el && el.value.trim()) {
+                      const val = el.value.trim();
+                      const current = Array.isArray(profileForm.subjects) ? profileForm.subjects : [];
+                      if (!current.includes(val)) {
+                        setProfileForm({ ...profileForm, subjects: [...current, val] });
+                      }
+                      el.value = '';
+                    }
+                  }}
+                  style={{
+                    padding: '7px 14px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: THEME.accentGold,
+                    color: '#fff',
+                    fontWeight: 'bold',
+                    fontSize: '13px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  + जोड़ें
+                </button>
+              </div>
+
+              {profileForm.subjects?.length > 0 && (
+                <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '8px', background: '#fffbeb', padding: '8px 12px', borderRadius: '6px', border: '1px solid #fde68a' }}>
+                  🎯 <strong>चयनित विषय:</strong> {profileForm.subjects.join(', ')}
+                  <div style={{ color: '#059669', marginTop: '3px', fontWeight: '600' }}>
+                    🪪 ID कार्ड पर दिखेंगे: {profileForm.subjects.slice(0, 2).join(', ')}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div style={{ marginBottom: '14px' }}>
@@ -1553,6 +1726,21 @@ const MentorDashboard = () => {
       {/* TAB 8: FESTIVAL & SPECIAL MESSAGES */}
       {activeTab === 'festivals' && (
         <FestivalMessagePortal user={user} />
+      )}
+
+      {/* TAB 9: EXAMS & OPPORTUNITIES */}
+      {activeTab === 'opportunities' && (
+        <OpportunitiesView user={currentUser} canPost={true} themeColor="#b45309" />
+      )}
+
+      {/* TAB 10: STUDY MATERIALS & PYQ */}
+      {activeTab === 'materials' && (
+        <StudyMaterialsView user={currentUser} canUpload={true} themeColor="#b45309" />
+      )}
+
+      {/* TAB 11: DISCUSSION FORUM */}
+      {activeTab === 'forum' && (
+        <DiscussionForumView user={currentUser} themeColor="#b45309" />
       )}
 
     </div>

@@ -11,7 +11,9 @@ const MentorSignUp = () => {
     whatsappPhone: '',
     callingPhone: '',
     sameAsWhatsapp: false,
+    village: '',
     district: '',
+    state: '',
     address: '',
     collegeName: '',
     qualification: '',
@@ -75,6 +77,12 @@ const MentorSignUp = () => {
     setLoading(true);
 
     try {
+      if (!formData.village.trim() && !formData.district.trim()) {
+        setError('कृपया गाँव/कस्बा या जिला में से कम से कम एक जानकारी अवश्य दर्ज करें।');
+        setLoading(false);
+        return;
+      }
+
       // Merge subjects and custom subject if "Other" selected
       let finalSubjects = [...formData.subjects];
       if (finalSubjects.includes('Other')) {
@@ -84,7 +92,14 @@ const MentorSignUp = () => {
         }
       }
 
-      const payload = { ...formData, subjects: finalSubjects };
+      const payload = { 
+        ...formData, 
+        village: formData.village.trim(),
+        villageName: formData.village.trim(),
+        district: formData.district.trim(),
+        state: formData.state.trim(),
+        subjects: finalSubjects 
+      };
       await API.post('/auth/register-mentor', payload);
       setSubmitted(true);
     } catch (err) {
@@ -185,8 +200,18 @@ const MentorSignUp = () => {
           </div>
 
           <div>
-            <label style={labelStyle}>जिला (District) *</label>
-            <input type="text" name="district" value={formData.district} onChange={handleChange} required style={inputStyle} placeholder="अपने जिले का नाम" />
+            <label style={labelStyle}>गाँव / कस्बा (Village / Town)</label>
+            <input type="text" name="village" value={formData.village} onChange={handleChange} style={inputStyle} placeholder="अपने गाँव या कस्बे का नाम" />
+          </div>
+
+          <div>
+            <label style={labelStyle}>जिला (District)</label>
+            <input type="text" name="district" value={formData.district} onChange={handleChange} style={inputStyle} placeholder="अपने जिले का नाम" />
+          </div>
+
+          <div>
+            <label style={labelStyle}>राज्य (State)</label>
+            <input type="text" name="state" value={formData.state} onChange={handleChange} style={inputStyle} placeholder="जैसे: झारखण्ड, बिहार, उत्तर प्रदेश आदि" />
           </div>
 
           <div>
