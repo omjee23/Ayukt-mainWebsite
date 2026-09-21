@@ -37,7 +37,7 @@ export const API_BASE_URL = (() => {
 // 3. Dynamic Admin Portal URL for role-based redirects
 export const ADMIN_URL =
   sanitizeUrl(typeof import.meta !== 'undefined' ? import.meta.env?.VITE_ADMIN_URL : '') ||
-  'https://avyuktadmin.vercel.app';
+  'https://admin.avyuktutthansanstha.org';
 
 // 4. Centralized Axios Instance with Automatic JWT Token Attachment
 export const API = axios.create({
