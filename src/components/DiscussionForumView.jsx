@@ -16,6 +16,58 @@ const SUBJECT_LIST = [
 
 const CLASS_LIST = ['All', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10', 'Class 11', 'Class 12'];
 
+// Smart Client-Side Image Compressor (Reduces 4-8MB phone camera photos to ~150KB WebP)
+const compressImageIfNeeded = async (file) => {
+  if (!file || !file.type || !file.type.startsWith('image/')) return file;
+  if (file.size <= 300 * 1024) return file; // Already lightweight
+
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const maxDimension = 1400; // Sharp HD resolution for clear formula/text reading
+
+        if (width > height && width > maxDimension) {
+          height = Math.round((height * maxDimension) / width);
+          width = maxDimension;
+        } else if (height > maxDimension) {
+          width = Math.round((width * maxDimension) / height);
+          height = maxDimension;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(
+          (blob) => {
+            if (blob && blob.size < file.size) {
+              const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", {
+                type: "image/webp",
+                lastModified: Date.now(),
+              });
+              resolve(compressedFile);
+            } else {
+              resolve(file);
+            }
+          },
+          'image/webp',
+          0.8
+        );
+      };
+      img.onerror = () => resolve(file);
+    };
+    reader.onerror = () => resolve(file);
+  });
+};
+
 const DiscussionForumView = ({ user, themeColor = '#2563eb' }) => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -238,7 +290,8 @@ const DiscussionForumView = ({ user, themeColor = '#2563eb' }) => {
       if (qVoiceBlob) {
         fd.append('attachment', qVoiceBlob, 'voice-question.webm');
       } else if (qAttachment) {
-        fd.append('attachment', qAttachment);
+        const processedFile = await compressImageIfNeeded(qAttachment);
+        fd.append('attachment', processedFile);
       }
 
       await API.post('/discussions', fd, {
@@ -297,7 +350,8 @@ const DiscussionForumView = ({ user, themeColor = '#2563eb' }) => {
       if (hasVoice) {
         fd.append('attachment', draft.voiceBlob, 'voice-answer.webm');
       } else if (hasFile) {
-        fd.append('attachment', draft.file);
+        const processedFile = await compressImageIfNeeded(draft.file);
+        fd.append('attachment', processedFile);
       }
 
       await API.post(`/discussions/${questionId}/answers`, fd, {
