@@ -24,7 +24,7 @@ export const BACKEND_URL = (() => {
   }
   // Production fallback if deployed on Vercel
   if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
-    return 'https://avyukt-backend.onrender.com';
+    return 'https://avyukt-backend-vct6.onrender.com';
   }
   return 'http://localhost:5001';
 })();
